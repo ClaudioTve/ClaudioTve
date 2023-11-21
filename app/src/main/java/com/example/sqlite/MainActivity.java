@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         Ubicacion.setAdapter(adaptador2);
     }
 
-    public void RegistrarProducto(View view){
+    public void RegistrarProducto(View view) {
         AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this, "ControlInventario", null, 1);
         SQLiteDatabase BaseDatos = admin.getWritableDatabase();
         String IDproducto = ID.getText().toString();
@@ -57,7 +57,11 @@ public class MainActivity extends AppCompatActivity {
         String cantidad = Cantidad.getText().toString();
         String precio = Precio.getText().toString();
         String ubicacion = Ubicacion.getSelectedItem().toString();
-        if (!IDproducto.isEmpty() && !NombreProducto.isEmpty() && !CategoriaS.equals("Seleccione:") && !cantidad.equals("") && !precio.equals("") && !ubicacion.equals("Seleccione:")){
+
+        Cursor filamia = BaseDatos.rawQuery("Select * from Inventario_Bodega where ID =" + IDproducto, null);
+        if(!filamia.moveToFirst()){
+
+        if (!IDproducto.isEmpty() && !NombreProducto.isEmpty() && !CategoriaS.equals("Seleccione:") && !cantidad.equals("") && !precio.equals("") && !ubicacion.equals("Seleccione:")) {
             ContentValues DatosUsuario = new ContentValues();
             DatosUsuario.put("ID", IDproducto);
             DatosUsuario.put("NombreProducto", NombreProducto);
@@ -73,14 +77,18 @@ public class MainActivity extends AppCompatActivity {
             Cantidad.setText("");
             Precio.setText("");
             Ubicacion.setSelection(0);
-
-            Toast.makeText(this,"Producto registrado exitosamente", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this,"Debes completar toda la informacion", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Producto registrado exitosamente", Toast.LENGTH_SHORT).show();
         }
-    }
+        }else{
+          Toast.makeText(this, "No se puede repetir una ide", Toast.LENGTH_SHORT).show();
+        }
+
+   // Cursor fila = BaseDatos.rawQuery("Select ID from Inventario_Bodega where ID =" + idProducto, null);
+//     if(fila.moveToFirst()){
 
 
+  }
+    //
     public void BuscarProducto(View view){
         AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this, "ControlInventario", null, 1);
         SQLiteDatabase BaseDatos = admin.getWritableDatabase();//corregi aca
